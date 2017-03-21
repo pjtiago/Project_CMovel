@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.estg.joaoviana.project_cmovel.authentication.LoginActivity">
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:textSize="50dp"
+        android:textColor="@color/black"
+        android:text="@string/title"/>
+    <TextView
+        android:id="@+id/titleLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:textSize="25dp"
+        android:textColor="@color/black"
+        android:text="@string/login"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleLogin"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout1"
+        android:layout_marginTop="25dp">
+
+
+        <EditText
+            android:id="@+id/editUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textSize="25dp"
+            android:padding="10dp"
+            android:hint="@string/username_email"
+            android:background="@drawable/my_border"
+             />
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textSize="25dp"
+            android:padding="10dp"
+            android:inputType="textPassword"
+            android:layout_marginTop="25dp"
+            android:hint="@string/password"
+            android:background="@drawable/my_border"
+            />
+
+        <TextView
+            android:id="@+id/failedAuthenticate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Authentication Failed"
+            android:textSize="20dp"
+            android:textColor="@color/red"
+            android:layout_marginTop="10dp"
+            />
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/btn_sign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_register"
+        android:text="@string/sign_in"
+        android:textSize="25dp"
+        android:backgroundTint="@color/darkGrey"
+        android:padding="15dp"
+        android:onClick="login"
+        />
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        android:textSize="25dp"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/darkGrey"
+        android:padding="15dp"
+        android:onClick="btnAnotherActivity"
+        />
+
+
+</RelativeLayout>

@@ -8,4 +8,5 @@
     <color name="darkGrey">#666</color>
     <color name="ligthGrey">#ccc</color>
     <color name="red">#ff0000</color>
+    <color name="orange">#ffa500</color>
 </resources>

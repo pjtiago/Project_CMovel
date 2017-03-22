@@ -40,11 +40,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-/*
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_main, new Frag1())
-                .commit();*/
+                .replace(R.id.content_main, new MainFragment())
+                .commit();
     }
 
     @Override
@@ -85,13 +85,26 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_map) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_main, new MainFragment())
+                    .commit();
         } else if (id == R.id.nav_gallery) {
+
 
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_main, new MessagesFrag())
+                    .commit();
+
+        } else if (id == R.id.nav_messages) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_main, new MessagesFrag())
+                    .commit();
 
         } else if (id == R.id.nav_share) {
 

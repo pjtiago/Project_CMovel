@@ -1,7 +1,10 @@
 package com.estg.joaoviana.project_cmovel.authentication;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -35,6 +38,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Intent i;
+        if(isSessionOpen()){
+            giveModelAuth();
+            i = new Intent(LoginActivity.this, MainActivity.class);
+            finish();
+            startActivity(i);
+        }
         editTextUsername  = (EditText)findViewById(R.id.editUsername);
         editTextPassword = (EditText)findViewById(R.id.editPassword);
 
@@ -60,9 +70,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View v) {
-        if(!Connectivity.isConnected(this)){
-            Toast.makeText(getApplicationContext(),"Network not available", Toast.LENGTH_LONG).show();
-        }else {
+        if (!Connectivity.isConnected(this)) {
+            Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_LONG).show();
+        } else {
             if (!isFieldsCorrect()) {
                 Toast.makeText(getApplicationContext(), R.string.emptyfields, Toast.LENGTH_LONG).show();
             } else {
@@ -86,6 +96,8 @@ public class LoginActivity extends AppCompatActivity {
                                         Auth.setId(jsonoutput.getString("id"));
                                         Auth.setUsername(jsonoutput.getString("username"));
                                         Auth.setEmail(jsonoutput.getString("email"));
+
+                                        setSession(Auth.getId(),Auth.getUsername(),Auth.getEmail());
 
                                         i = new Intent(LoginActivity.this, MainActivity.class);
                                         finish();
@@ -124,6 +136,51 @@ public class LoginActivity extends AppCompatActivity {
                 MySingleton.getInstance(this).addToRequestQueue(stringRequest);
             }
         }
+    }
+
+    public static void dropSession(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("tiagopreferences",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("id",null);
+        editor.putString("username",null);
+        editor.putString("email",null);
+        Auth.setId("");Auth.setUsername("");Auth.setEmail("");
+
+        editor.commit();
+        Intent i = new Intent(context, LoginActivity.class);
+        ((Activity) context).finish();
+        context.startActivity(i);
+    }
+
+    private void giveModelAuth(){
+        SharedPreferences sharedPreferences = getSharedPreferences("tiagopreferences",Context.MODE_PRIVATE);
+        Auth.setId(sharedPreferences.getString("id",""));
+        Auth.setUsername(sharedPreferences.getString("username",""));
+        Auth.setEmail(sharedPreferences.getString("email",""));
+    }
+
+    private void setSession(String id,String username,String email){
+        SharedPreferences sharedPreferences = getSharedPreferences("tiagopreferences",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("id",id);
+        editor.putString("username",username);
+        editor.putString("email",email);
+        editor.commit();
+    }
+
+    public boolean isSessionOpen(){
+        SharedPreferences sharedPreferences = getSharedPreferences("tiagopreferences",Context.MODE_PRIVATE);
+
+        String id = sharedPreferences.getString("id",null);
+        String username = sharedPreferences.getString("username",null);
+        String email = sharedPreferences.getString("email",null);
+
+        if(id == null ||username == null || email == null ){
+            return false;
+        }else{
+            return true;
+        }
+
     }
 
     private void messageVisiblity(){

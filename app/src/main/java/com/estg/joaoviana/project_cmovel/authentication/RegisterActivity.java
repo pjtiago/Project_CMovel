@@ -47,9 +47,9 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     public void registration(View v) {
-        if(!Connectivity.isConnected(this)){
-            Toast.makeText(getApplicationContext(),"Network not available", Toast.LENGTH_LONG).show();
-        }else {
+        if (!Connectivity.isConnected(this)) {
+            Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_LONG).show();
+        } else {
             if (!isFieldsCorrect()) {
 
             } else {
@@ -108,6 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
     }
+
 
 
 

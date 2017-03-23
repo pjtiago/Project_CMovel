@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context="com.estg.joaoviana.project_cmovel.authentication.RegisterActivity">
 
     <TextView
@@ -116,6 +117,8 @@
             android:textSize="25dp"
             android:backgroundTint="@color/darkGrey"
             android:padding="10dp"
+            android:layout_marginRight="4dp"
+            android:background="@color/white"
             android:onClick="registration"
 
             />
@@ -128,6 +131,8 @@
             android:textSize="25dp"
             android:backgroundTint="@color/darkGrey"
             android:padding="10dp"
+            android:layout_marginLeft="4dp"
+            android:background="@color/white"
             android:onClick="cancel"
 
             />

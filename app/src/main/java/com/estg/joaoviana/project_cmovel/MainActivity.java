@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity
                 .beginTransaction()
                 .replace(R.id.content_main, new MainFragment())
                 .commit();
+
     }
 
     @Override

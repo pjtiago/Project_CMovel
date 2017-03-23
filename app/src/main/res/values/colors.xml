@@ -4,9 +4,13 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+
     <color name="black">#000</color>
     <color name="darkGrey">#666</color>
     <color name="ligthGrey">#ccc</color>
     <color name="red">#ff0000</color>
     <color name="orange">#ffa500</color>
+    <color name="darkblue">#1919ff</color>
+    <color name="darkblue2">#000019</color>
+    <color name="white">#fff</color>
 </resources>

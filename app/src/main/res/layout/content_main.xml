@@ -9,4 +9,10 @@
     tools:context="com.estg.joaoviana.project_cmovel.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text"
+        android:text="adas"/>
+
 </RelativeLayout>

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 public class MainFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
+    View rootView;
 
     public MainFragment() {
         // Required empty public constructor
@@ -17,20 +18,23 @@ public class MainFragment extends Fragment {
 
 
     // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance(int sectionNumber) {
+    public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView =  inflater.inflate(R.layout.fragment_main,container,false);
+
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_main, null);
+        } else {
+            ((ViewGroup) container.getParent()).removeView(rootView);
+        }
 
         return rootView;
     }
+
 
 }

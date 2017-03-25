@@ -3,6 +3,8 @@ package com.estg.joaoviana.project_cmovel;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,12 +14,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.estg.joaoviana.project_cmovel.authentication.Auth;
 import com.estg.joaoviana.project_cmovel.authentication.LoginActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String TAG = LoginActivity.class.getSimpleName();
+
+    TextView texttest;
+    Fragment mainFrag;
+    Fragment messagesFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +42,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("Welcome "+ "'"+ Auth.getUsername()+"'");
+
+        mainFrag = MainFragment.newInstance();
+        messagesFrag = MessagesFrag.newInstance();
+        texttest = (TextView)findViewById(R.id.text);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -45,10 +65,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager()
+        /*getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_main, new MainFragment())
-                .commit();
+                .replace(R.id.content_main, mainFrag)
+                .commit();*/
+        getPlaces();
 
     }
 
@@ -92,24 +113,23 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_map) {
+
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_main, new MainFragment())
+                    .replace(R.id.content_main, mainFrag)
                     .commit();
         } else if (id == R.id.nav_gallery) {
 
 
         } else if (id == R.id.nav_slideshow) {
 
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.content_main, new MessagesFrag())
-                    .commit();
+
 
         } else if (id == R.id.nav_messages) {
+
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_main, new MessagesFrag())
+                    .replace(R.id.content_main, messagesFrag)
                     .commit();
 
         } else if (id == R.id.nav_share) {
@@ -121,5 +141,30 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void getPlaces(){
+        Toast.makeText(getApplicationContext(), "Teste1", Toast.LENGTH_LONG).show();
+        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"+
+                "location=-33.8670522,151.1957362&radius=1500&key=AIzaSyDi34DMAOnv3r9suyA-ADYgVn9D3s_B0IQ";
+        // JSONObject jsonObject = new JSONObject();
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url,null,new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    JSONObject j = response;
+
+                    texttest.setText(j.toString());
+                    Toast.makeText(getApplicationContext(), "Teste2", Toast.LENGTH_LONG).show();
+                }
+            },new Response.ErrorListener(){
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+
+        });
+        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 }

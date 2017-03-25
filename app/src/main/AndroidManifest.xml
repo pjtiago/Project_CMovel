@@ -12,6 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDi34DMAOnv3r9suyA-ADYgVn9D3s_B0IQ"/>
+
         <activity android:name=".authentication.LoginActivity" android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
@@ -26,5 +33,5 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 </manifest>

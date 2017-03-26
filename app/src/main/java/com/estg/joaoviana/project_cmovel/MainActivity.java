@@ -1,5 +1,6 @@
 package com.estg.joaoviana.project_cmovel;
 
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,7 @@ import com.estg.joaoviana.project_cmovel.authentication.Auth;
 import com.estg.joaoviana.project_cmovel.authentication.LoginActivity;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity
@@ -65,11 +67,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*getSupportFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_main, mainFrag)
-                .commit();*/
-        getPlaces();
+                .commit();
+
+
 
     }
 
@@ -143,28 +146,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void getPlaces(){
-        Toast.makeText(getApplicationContext(), "Teste1", Toast.LENGTH_LONG).show();
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"+
-                "location=-33.8670522,151.1957362&radius=1500&key=AIzaSyDi34DMAOnv3r9suyA-ADYgVn9D3s_B0IQ";
-        // JSONObject jsonObject = new JSONObject();
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url,null,new Response.Listener<JSONObject>() {
 
-                @Override
-                public void onResponse(JSONObject response) {
-                    JSONObject j = response;
 
-                    texttest.setText(j.toString());
-                    Toast.makeText(getApplicationContext(), "Teste2", Toast.LENGTH_LONG).show();
-                }
-            },new Response.ErrorListener(){
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                }
-
-        });
-        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
-    }
 }

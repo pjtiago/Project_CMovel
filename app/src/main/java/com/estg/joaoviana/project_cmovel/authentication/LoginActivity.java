@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +39,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Boolean teste = Connectivity.isGPSEnabled(this);
+
+        if(teste){
+            Toast.makeText(getApplicationContext(), "Gps Ligado", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "GPS Desligado", Toast.LENGTH_LONG).show();
+        }
+
         Intent i;
         if(isSessionOpen()){
             giveModelAuth();
@@ -207,5 +216,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }
+
+
 
 }

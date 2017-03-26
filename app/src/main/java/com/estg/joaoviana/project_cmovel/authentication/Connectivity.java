@@ -5,6 +5,7 @@ package com.estg.joaoviana.project_cmovel.authentication;
  */
 
 import android.content.Context;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
@@ -15,6 +16,12 @@ import android.telephony.TelephonyManager;
  *
  */
 public class Connectivity {
+
+    public static boolean isGPSEnabled (Context mContext){
+        LocationManager locationManager = (LocationManager)
+                mContext.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
 
     /**
      * Get the network info

@@ -7,6 +7,7 @@
 
     <color name="black">#000</color>
     <color name="darkGrey">#666</color>
+    <color name="darkGrey2">#888</color>
     <color name="ligthGrey">#ccc</color>
     <color name="red">#ff0000</color>
     <color name="orange">#ffa500</color>

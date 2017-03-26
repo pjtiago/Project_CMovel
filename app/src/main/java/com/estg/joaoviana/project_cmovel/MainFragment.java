@@ -1,11 +1,9 @@
 package com.estg.joaoviana.project_cmovel;
 
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,23 +13,27 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements OnMapReadyCallback {
 
     TextView textSignal;
     TextView textTemperature;
     ImageView imageViewIcon;
     View rootView;
+    GoogleMap nMap;
 
     public MainFragment() {
         // Required empty public constructor
@@ -62,6 +64,7 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // do your variables initialisations here except Views!!!
+
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState){
@@ -72,6 +75,14 @@ public class MainFragment extends Fragment {
         imageViewIcon = (ImageView) view.findViewById(R.id.tIcon);
 
         flashSign(textSignal);
+
+
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+
+
     }
 
     @Override
@@ -79,8 +90,18 @@ public class MainFragment extends Fragment {
         super.onAttach(context);
 
         getWeather(context);
-
     }
+
+    @Override
+    public void onMapReady(GoogleMap map){
+        nMap = map;
+        LatLng statue = new LatLng(40.68, -74.04);
+        map.addMarker(new MarkerOptions()
+            .position(statue)
+            .title("Portugal"));
+        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+    }
+
 
     public void flashSign(TextView text){
         Animation anim = new AlphaAnimation(0.0f, 1.0f);

@@ -3,10 +3,17 @@ package com.estg.joaoviana.project_cmovel;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -17,23 +24,36 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 
-public class MainFragment extends Fragment implements OnMapReadyCallback {
+
+public class MainFragment extends Fragment implements LocationListener,OnMapReadyCallback,GoogleMap.OnMapLongClickListener {
 
     TextView textSignal;
     TextView textTemperature;
     ImageView imageViewIcon;
-    View rootView;
+    private View rootView;
     GoogleMap nMap;
+    public MapView mapView;
+    ArrayList<LatLng> pontos;
+
+    private static final String ARG_TYPE_MAP = "normal";
+    private String mTypeMap;
+    //LocationRequest mLocationRequest;
 
     public MainFragment() {
         // Required empty public constructor
@@ -41,66 +61,91 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
 
 
     // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance() {
+    public static MainFragment newInstance(String typeMap) {
         MainFragment fragment = new MainFragment();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_TYPE_MAP, typeMap);
+        fragment.setArguments(args);
 
         return fragment;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        getWeather(context);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
 
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_main, null);
         } else {
             ((ViewGroup) container.getParent()).removeView(rootView);
+            rootView = inflater.inflate(R.layout.fragment_main, null);
         }
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
 
         return rootView;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mTypeMap = getArguments().getString(ARG_TYPE_MAP);
+        }
+        pontos = new ArrayList<>();
         // do your variables initialisations here except Views!!!
-
-    }
-
-    public void onViewCreated(View view, Bundle savedInstanceState){
-        super.onViewCreated(view, savedInstanceState);
-        // initialise your views
-        textSignal = (TextView) view.findViewById(R.id.signal);
-        textTemperature = (TextView) view.findViewById(R.id.temperature);
-        imageViewIcon = (ImageView) view.findViewById(R.id.tIcon);
-
-        flashSign(textSignal);
-
-
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
-
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        textSignal = (TextView) getActivity().findViewById(R.id.signal);
+        textTemperature = (TextView) getActivity().findViewById(R.id.temperature);
+        imageViewIcon = (ImageView) getActivity().findViewById(R.id.tIcon);
 
-        getWeather(context);
+/*
+        Button b = (Button) v.findViewById(R.id.StartButton);
+        b.setOnClickListener(this);
+        */
+        flashSign(textSignal);
+
     }
+
+
+
+
 
     @Override
     public void onMapReady(GoogleMap map){
         nMap = map;
         LatLng statue = new LatLng(40.68, -74.04);
-        map.addMarker(new MarkerOptions()
+        nMap.addMarker(new MarkerOptions()
             .position(statue)
             .title("Portugal"));
-        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-    }
+        nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(statue)
+                .zoom(18)
+                .bearing(45)
+                .tilt(60)
+                .build();
+        nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        //nMap.setOnMapClickListener(this);
+        nMap.setOnMapLongClickListener(this);
+
+    };
+
 
 
     public void flashSign(TextView text){
@@ -184,4 +229,64 @@ public class MainFragment extends Fragment implements OnMapReadyCallback {
 
 
 
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_fragment, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.draw){
+            nMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    pontos.add(latLng);
+                    if(pontos.size()  == 4){
+                        PolygonOptions polygonOptions = new PolygonOptions();
+                        polygonOptions.addAll(pontos);
+
+                        polygonOptions.strokeColor(Color.RED);
+                        polygonOptions.fillColor(Color.BLUE);
+                        nMap.addPolygon(polygonOptions);
+                        pontos.clear();
+                        nMap.setOnMapClickListener(null);
+                    }
+                }
+            });
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }

@@ -1,11 +1,11 @@
 package com.estg.joaoviana.project_cmovel;
 
-import android.location.LocationManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,19 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.estg.joaoviana.project_cmovel.Messages.MessagesFrag;
 import com.estg.joaoviana.project_cmovel.authentication.Auth;
 import com.estg.joaoviana.project_cmovel.authentication.LoginActivity;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -36,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     TextView texttest;
     Fragment mainFrag;
     Fragment messagesFrag;
+    Fragment streetFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +45,11 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         setTitle("Welcome "+ "'"+ Auth.getUsername()+"'");
 
-        mainFrag = MainFragment.newInstance();
+        mainFrag = MainFragment.newInstance("normal");
         messagesFrag = MessagesFrag.newInstance();
         texttest = (TextView)findViewById(R.id.text);
+        streetFrag = StreetFragment.newInstance();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +68,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+
+        navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLUE ));
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -134,10 +141,6 @@ public class MainActivity extends AppCompatActivity
                     .beginTransaction()
                     .replace(R.id.content_main, messagesFrag)
                     .commit();
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 

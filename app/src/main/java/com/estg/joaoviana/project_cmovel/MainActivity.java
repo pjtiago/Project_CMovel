@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.estg.joaoviana.project_cmovel.Messages.MessagesFrag;
 import com.estg.joaoviana.project_cmovel.authentication.Auth;
 import com.estg.joaoviana.project_cmovel.authentication.LoginActivity;
+import com.estg.joaoviana.project_cmovel.favorites.FavoritesFragment;
+import com.estg.joaoviana.project_cmovel.properties.PropertiesFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity
 
     TextView texttest;
     Fragment mainFrag;
-    Fragment messagesFrag;
+    Fragment messagesFrag,favoritesFrag,propertiesFrag;
     Fragment streetFrag;
 
     @Override
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity
 
         mainFrag = MainFragment.newInstance("normal");
         messagesFrag = MessagesFrag.newInstance();
+        favoritesFrag = FavoritesFragment.newInstance();
+        propertiesFrag = PropertiesFragment.newInstance();
         texttest = (TextView)findViewById(R.id.text);
         streetFrag = StreetFragment.newInstance();
 
@@ -128,20 +132,23 @@ public class MainActivity extends AppCompatActivity
                     .beginTransaction()
                     .replace(R.id.content_main, mainFrag)
                     .commit();
-        } else if (id == R.id.nav_gallery) {
-
-
-        } else if (id == R.id.nav_slideshow) {
-
-
+        } else if (id == R.id.nav_favorites) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_main, favoritesFrag)
+                    .commit();
 
         } else if (id == R.id.nav_messages) {
-
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.content_main, messagesFrag)
                     .commit();
 
+        } else if (id == R.id.nav_properties) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_main, propertiesFrag)
+                    .commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

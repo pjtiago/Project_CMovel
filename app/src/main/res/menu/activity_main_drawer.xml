@@ -8,17 +8,17 @@
             android:icon="@drawable/gotomap32"
             android:title="Go to Map" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_star_black_36dp"
+            android:title="Favorites" />
         <item
             android:id="@+id/nav_messages"
             android:icon="@drawable/messages32"
             android:title="Messages" />
+        <item
+            android:id="@+id/nav_properties"
+            android:icon="@drawable/ic_settings_black_36dp"
+            android:title="Properties" />
     </group>
 <!--
     <item

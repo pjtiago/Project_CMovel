@@ -1,7 +1,7 @@
-package com.estg.joaoviana.project_cmovel.Messages;
+package com.estg.joaoviana.project_cmovel.properties;
 
 import android.content.Context;
-
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,18 +10,17 @@ import android.view.ViewGroup;
 
 import com.estg.joaoviana.project_cmovel.R;
 
-
-public class ReceiveMessagesFragment extends Fragment {
+public class PropertiesFragment extends Fragment {
 
     View rootView;
 
-    public ReceiveMessagesFragment() {
+    public PropertiesFragment() {
         // Required empty public constructor
     }
 
-    public static ReceiveMessagesFragment newInstance() {
-        ReceiveMessagesFragment fragment = new ReceiveMessagesFragment();
 
+    public static PropertiesFragment newInstance() {
+        PropertiesFragment fragment = new PropertiesFragment();
         return fragment;
     }
 
@@ -35,14 +34,13 @@ public class ReceiveMessagesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_receive_messages, null);
+            rootView = inflater.inflate(R.layout.fragment_properties, null);
         } else {
             ((ViewGroup) container.getParent()).removeView(rootView);
-            rootView = inflater.inflate(R.layout.fragment_receive_messages, null);
+            rootView = inflater.inflate(R.layout.fragment_properties, null);
         }
         return rootView;
-    }
-
+}
 
     @Override
     public void onAttach(Context context) {
@@ -53,7 +51,5 @@ public class ReceiveMessagesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
-
-
 
 }

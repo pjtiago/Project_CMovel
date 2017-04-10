@@ -7,7 +7,10 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,6 +23,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -39,6 +44,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainFragment extends Fragment implements LocationListener,OnMapReadyCallback,GoogleMap.OnMapLongClickListener {
@@ -50,6 +57,10 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     GoogleMap nMap;
     public MapView mapView;
     ArrayList<LatLng> pontos;
+
+    private static Timer timer = null;
+    LocationManager mlocManager;
+    LocationListener mlocListener;
 
     private static final String ARG_TYPE_MAP = "normal";
     private String mTypeMap;
@@ -74,7 +85,16 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+
+
         getWeather(context);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mlocManager.removeUpdates(mlocListener);
     }
 
     @Override
@@ -92,6 +112,64 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
 
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            mlocManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+            mlocListener = new MyLocationListener();
+            try{
+                mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+            }catch (SecurityException e){
+            }
+            final Handler handler = new Handler();
+            TimerTask timertask = new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                                if (MyLocationListener.latitude > 0) {
+
+                                    Toast.makeText(getActivity(), MyLocationListener.latitude + " | " +MyLocationListener.longitude,
+                                            Toast.LENGTH_LONG).show();
+
+                                    LatLng currentPosition = new LatLng(MyLocationListener.latitude, MyLocationListener.longitude);
+                                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                                            .target(currentPosition)
+                                            .zoom(18)
+                                            .bearing(45)
+                                            .tilt(60)
+                                            .build();
+                                    nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                                    if(textSignal.getVisibility()== View.VISIBLE){
+                                        textSignal.setVisibility(View.INVISIBLE);
+                                    }
+
+
+                                } else {
+                                    if(textSignal.getVisibility()== View.INVISIBLE){
+                                        textSignal.setVisibility(View.VISIBLE);
+                                    }
+
+
+
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), "GPS is NOT turn ON",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+            };
+            timer = new Timer();
+            timer.schedule(timertask, 0, 5000);
+
+
+
         }
 
 
@@ -114,12 +192,8 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
         textTemperature = (TextView) getActivity().findViewById(R.id.temperature);
         imageViewIcon = (ImageView) getActivity().findViewById(R.id.tIcon);
 
-/*
-        Button b = (Button) v.findViewById(R.id.StartButton);
-        b.setOnClickListener(this);
-        */
-        flashSign(textSignal);
 
+        flashSign(textSignal);
     }
 
 

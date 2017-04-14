@@ -5,20 +5,26 @@ package com.estg.joaoviana.project_cmovel.Model;
  */
 
 public class Place {
-    private String identifier;
+    private String id;
     private String name;
     private String icon;
-    private String[] types;
-    private String location;
     private Double latitude;
     private Double longitude;
 
-    public String getIdentifier() {
-        return identifier;
+    public Place(String id, String name, String icon, Double latitude, Double longitude) {
+        this.id = id;
+        this.name = name;
+        this.icon = icon;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -35,22 +41,6 @@ public class Place {
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public String[] getTypes() {
-        return types;
-    }
-
-    public void setTypes(String[] types) {
-        this.types = types;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public Double getLatitude() {

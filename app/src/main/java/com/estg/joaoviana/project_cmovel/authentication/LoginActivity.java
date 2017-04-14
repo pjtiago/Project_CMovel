@@ -199,7 +199,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private Boolean isFieldsCorrect(){
+        String text = editTextUsername.getText().toString();
         if(editTextUsername.getText().toString().matches("")|| editTextPassword.getText().toString().matches("")){
+            return false;
+        }else if(text.contains(".")){
             return false;
         }else{
             return true;

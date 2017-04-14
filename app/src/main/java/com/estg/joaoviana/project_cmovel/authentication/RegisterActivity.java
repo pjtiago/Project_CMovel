@@ -114,6 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private Boolean isFieldsCorrect(){
+        String text = editTextUsername.getText().toString();
         if(editTextUsername.getText().toString().matches("")||
                 editTextEmail.getText().toString().matches("")||
                 editTextPassword.getText().toString().matches("") ||
@@ -126,6 +127,9 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }else if(!editTextEmail.getText().toString().contains("@")){
             Toast.makeText(getApplicationContext(), R.string.valid_mail, Toast.LENGTH_LONG).show();
+            return false;
+        }else if(text.contains(".")){
+            Toast.makeText(getApplicationContext(),"Invalid Username", Toast.LENGTH_LONG).show();
             return false;
         }else{
             return true;

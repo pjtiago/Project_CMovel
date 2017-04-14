@@ -3,6 +3,7 @@ package com.estg.joaoviana.project_cmovel;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,17 +31,24 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.estg.joaoviana.project_cmovel.Model.Place;
+import com.estg.joaoviana.project_cmovel.Model.PlacesList;
+import com.estg.joaoviana.project_cmovel.authentication.Connectivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,22 +57,32 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MainFragment extends Fragment implements LocationListener,OnMapReadyCallback,GoogleMap.OnMapLongClickListener {
+public class MainFragment extends Fragment implements LocationListener,OnMapReadyCallback,
+        GoogleMap.OnMapLongClickListener,GoogleMap.OnMapClickListener,GoogleMap.OnMarkerClickListener {
+
+    ArrayList<Place> placeList;
 
     TextView textSignal;
     TextView textTemperature;
+    TextView textStreet;
+    TextView textCity;
+    TextView textCountry;
+
     ImageView imageViewIcon;
     private View rootView;
     GoogleMap nMap;
-    public MapView mapView;
     ArrayList<LatLng> pontos;
 
-    private static Timer timer = null;
+
+    Handler handler;
     LocationManager mlocManager;
     LocationListener mlocListener;
 
+    Button b;
+
+    TextView textFavorite;
+    Button btn_favorite;
     private static final String ARG_TYPE_MAP = "normal";
-    private String mTypeMap;
     //LocationRequest mLocationRequest;
 
     public MainFragment() {
@@ -86,14 +105,36 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        if (!Connectivity.isConnected(getActivity())) {
+            Toast.makeText(getActivity(), "Network not available", Toast.LENGTH_LONG).show();
+        }
+        getRadius();
+        getMap();
+        givelastLocation();
 
-
+        getStreet(getContext());
         getWeather(context);
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //timertask.cancel();
+        mlocManager.removeUpdates(mlocListener);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //timertask.cancel();
+        mlocManager.removeUpdates(mlocListener);
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
+        //timertask.cancel();
         mlocManager.removeUpdates(mlocListener);
     }
 
@@ -113,76 +154,17 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
 
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-            mlocManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-            mlocListener = new MyLocationListener();
-            try{
-                mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
-            }catch (SecurityException e){
-            }
-            final Handler handler = new Handler();
-            TimerTask timertask = new TimerTask() {
-                @Override
-                public void run() {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                                if (MyLocationListener.latitude > 0) {
-
-                                    Toast.makeText(getActivity(), MyLocationListener.latitude + " | " +MyLocationListener.longitude,
-                                            Toast.LENGTH_LONG).show();
-
-                                    LatLng currentPosition = new LatLng(MyLocationListener.latitude, MyLocationListener.longitude);
-                                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                                            .target(currentPosition)
-                                            .zoom(18)
-                                            .bearing(45)
-                                            .tilt(60)
-                                            .build();
-                                    nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                                    if(textSignal.getVisibility()== View.VISIBLE){
-                                        textSignal.setVisibility(View.INVISIBLE);
-                                    }
-
-
-                                } else {
-                                    if(textSignal.getVisibility()== View.INVISIBLE){
-                                        textSignal.setVisibility(View.VISIBLE);
-                                    }
-
-
-
-                                }
-                            } else {
-                                Toast.makeText(getActivity(), "GPS is NOT turn ON",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-            };
-            timer = new Timer();
-            timer.schedule(timertask, 0, 5000);
-
-
-
         }
-
-
         return rootView;
     }
 
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mTypeMap = getArguments().getString(ARG_TYPE_MAP);
-        }
+
         pontos = new ArrayList<>();
         // do your variables initialisations here except Views!!!
+
     }
 
     @Override
@@ -190,37 +172,73 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
         super.onActivityCreated(savedInstanceState);
         textSignal = (TextView) getActivity().findViewById(R.id.signal);
         textTemperature = (TextView) getActivity().findViewById(R.id.temperature);
+        textStreet = (TextView) getActivity().findViewById(R.id.street);
+        textCity = (TextView) getActivity().findViewById(R.id.city);
+        textCountry = (TextView) getActivity().findViewById(R.id.country);
         imageViewIcon = (ImageView) getActivity().findViewById(R.id.tIcon);
+
+        textFavorite = (TextView)getActivity().findViewById(R.id.textFavorite);
+        btn_favorite = (Button) getActivity().findViewById(R.id.btn_favorite);
+        btn_favorite.setVisibility(View.INVISIBLE);
+
+
+        b = (Button) rootView.findViewById(R.id.update);
+        b.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getWeather(getContext());
+                getStreet(getContext());
+                currentLocationListener(v);
+            }
+        });
 
 
         flashSign(textSignal);
     }
 
-
-
-
-
     @Override
     public void onMapReady(GoogleMap map){
+        LatLng currentLocal;
+        currentLocal = new LatLng(Utils.lastLatitude,Utils.lastLongitude);
+
+        getPointsInterest(getActivity().getApplicationContext(),String.valueOf(Utils.radius));
+
         nMap = map;
-        LatLng statue = new LatLng(40.68, -74.04);
         nMap.addMarker(new MarkerOptions()
-            .position(statue)
-            .title("Portugal"));
-        nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                .position(currentLocal)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                .title("You are Here")).showInfoWindow();
+
+        if(Utils.map.equals("Satellite")){
+            nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        }else if(Utils.map.equals("Terrain")){
+            nMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        }else if(Utils.map.equals("Hybrid")) {
+            nMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }else if(Utils.map.equals("Normal")){
+            nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(statue)
-                .zoom(18)
+                .target(currentLocal)
+                .zoom(19)
                 .bearing(45)
                 .tilt(60)
                 .build();
         nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        nMap.addCircle(new CircleOptions()
+                .center(currentLocal)
+                .radius(Integer.parseInt(Utils.radius))
+                .strokeWidth(0f)
+                .fillColor(0x550000FF));
         //nMap.setOnMapClickListener(this);
         nMap.setOnMapLongClickListener(this);
 
-    };
-
-
+        currentLocationListener(b);
+    }
 
     public void flashSign(TextView text){
         Animation anim = new AlphaAnimation(0.0f, 1.0f);
@@ -231,9 +249,102 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
         text.startAnimation(anim);
     }
 
+
+    private void currentLocationListener(View v) {
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        mlocManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        mlocListener = new MyLocationListener();
+        try{
+            mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+        }catch (SecurityException e){
+        }
+        handler = new Handler();
+        handler.post(new Runnable() {
+            public void run() {
+                if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    if (MyLocationListener.latitude > 0) {
+                        setLastLocation(MyLocationListener.latitude,MyLocationListener.longitude);
+                        LatLng currentPosition = new LatLng(MyLocationListener.latitude, MyLocationListener.longitude);
+                        textSignal.setText("");
+                        nMap.clear();
+                        Toast.makeText(getActivity(), MyLocationListener.latitude + " | " +MyLocationListener.longitude,
+                                Toast.LENGTH_LONG).show();
+
+                        getPointsInterest(getActivity().getApplicationContext(),String.valueOf(Utils.radius));
+
+
+                        nMap.addMarker(new MarkerOptions()
+                                .position(currentPosition)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                .title("You are Here")).showInfoWindow();
+
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(currentPosition)
+                                .zoom(19)
+                                .bearing(45)
+                                .tilt(60)
+                                .build();
+                        nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                        nMap.addCircle(new CircleOptions()
+                                .center(currentPosition)
+                                .radius(Integer.parseInt(Utils.radius))
+                                .strokeWidth(0f)
+                                .fillColor(0x550000FF));
+                    } else {
+                        if(textSignal.getText()!="No Signal" ){
+                            textSignal.setText("No Signal");
+                        }
+
+                        if(textSignal.getVisibility()== View.INVISIBLE){
+                            textSignal.setVisibility(View.VISIBLE);
+                        }
+                        getPointsInterest(getActivity().getApplicationContext(),String.valueOf(Utils.radius));
+
+                        Toast.makeText(getActivity(),"SEM SINAL",
+                                Toast.LENGTH_LONG).show();
+                        LatLng currentPosition = new LatLng(Utils.lastLatitude, Utils.lastLongitude );
+
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(currentPosition)
+                                .zoom(19)
+                                .bearing(45)
+                                .tilt(60)
+                                .build();
+                        nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                    }
+                } else {
+                    if(textSignal.getText()!="GPS is NOT turn ON"){
+                        textSignal.setText("GPS is NOT turn ON");
+                    }
+
+                    if(textSignal.getVisibility()== View.INVISIBLE){
+                        textSignal.setVisibility(View.VISIBLE);
+                    }
+                    Toast.makeText(getActivity(), "Sem Internet",
+                            Toast.LENGTH_LONG).show();
+                    LatLng currentPosition = new LatLng(Utils.lastLatitude, Utils.lastLongitude );
+
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(currentPosition)
+                            .zoom(19)
+                            .bearing(45)
+                            .tilt(60)
+                            .build();
+                    nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                }
+            }
+        });
+    }
+
     public void getWeather(Context context){
         String url= "https://api.darksky.net/forecast/"+
-                "52c520f1ba45b4de505970f8b0d2187e/"+"-33.8670522,151.1957362"+
+                "52c520f1ba45b4de505970f8b0d2187e/"+Utils.lastLatitude+","+Utils.lastLongitude+
                 "?exclude=\"minutely,hourly,daily,alerts,flags\"&units=si";
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url,null,new Response.Listener<JSONObject>() {
@@ -253,6 +364,110 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
 
                 }
 
+            }
+        },new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //textTemperature.setText(error.toString());
+            }
+
+        });
+        MySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
+    }
+
+    public void getStreet(Context context){
+        String url= "http://maps.googleapis.com/maps/api/geocode/json?latlng="+Utils.lastLatitude+","+Utils.lastLongitude;
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url,null,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONArray arr;
+                JSONArray arr_components;
+                JSONObject obj;
+
+                String port_number = "";
+                String street = "";
+                String city = "";
+                String country = "";
+
+                JSONObject component;
+                JSONArray types;
+                try {
+                    arr = response.getJSONArray("results");
+                    obj = arr.getJSONObject(0);
+                    arr_components = obj.getJSONArray("address_components");
+
+                    for(int i=0;i<arr_components.length();i++){
+                        component = arr_components.getJSONObject(i);
+                        types = component.getJSONArray("types");
+
+                        if(types.getString(0).equals("street_number")){
+                            port_number = component.getString("long_name");
+                        }else if(types.getString(0).equals("route")){
+                            street = component.getString("long_name");
+                        }else if(types.getString(0).equals("locality")){
+                            city = component.getString("long_name");
+                        }else if(types.getString(0).equals("country")){
+                            country = component.getString("short_name");
+                        }
+                    }
+
+                    textStreet.setText(street+", "
+                            +port_number);
+                    textCity.setText(city);
+                    textCountry.setText(country);
+
+
+                }catch(JSONException ex){
+                }
+            }
+        },new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //textTemperature.setText(error.toString());
+            }
+
+        });
+        MySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
+    }
+
+    public void getPointsInterest(Context context,String radius){
+        String url= "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"+
+                "location="+Utils.lastLatitude+","+Utils.lastLongitude+"&radius="+radius+
+                "&key=AIzaSyDi34DMAOnv3r9suyA-ADYgVn9D3s_B0IQ";
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url,null,new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                placeList = new ArrayList<>();
+                try {
+                    JSONArray results;
+                    JSONObject obj;
+                    JSONObject localization;
+                    JSONObject geometry;
+                    Place place;
+                    results = response.getJSONArray("results");
+                    for(int i=0;i<results.length();i++) {
+                        obj = results.getJSONObject(i);
+                        geometry = obj.getJSONObject("geometry");
+                        localization = geometry.getJSONObject("location");
+                        String id = obj.getString("id");
+                        String name = obj.getString("name");
+                        String icon = obj.getString("icon");
+                        Double latitude = Double.parseDouble(localization.getString("lat"));
+                        Double longitude = Double.parseDouble(localization.getString("lng"));
+                        place = new Place(id,name,icon,latitude,longitude);
+
+                        LatLng placeLocal = new LatLng(place.getLatitude(),place.getLongitude());
+                        placeList.add(place);
+                        setMarker(placeLocal,name,i);
+
+                    }
+                }catch(JSONException ex){
+                }
             }
         },new Response.ErrorListener(){
 
@@ -301,13 +516,94 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
         return iconId;
     }
 
+    private void givelastLocation(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("tiagolocation",Context.MODE_PRIVATE);
+        if(sharedPreferences.getString("latitude","") != "" || sharedPreferences.getString("longitude","") != ""){
+            Utils.lastLatitude = Double.parseDouble(sharedPreferences.getString("latitude",""));
+            Utils.lastLongitude = Double.parseDouble(sharedPreferences.getString("longitude",""));
+        }else{
+            Utils.lastLatitude = 41.6946;
+            Utils.lastLongitude = -8.83016;
+        }
+
+    }
+
+    private void setLastLocation(Double latitude,Double longitude){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("tiagolocation",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("latitude",String.valueOf(latitude));
+        editor.putString("longitude",String.valueOf(longitude));
+
+        editor.commit();
+    }
+
+    private void getRadius(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("tiagoproperties",Context.MODE_PRIVATE);
+        if(sharedPreferences.getString("radius","") != ""||sharedPreferences.getString("radius","") != null ){
+            Utils.radius = sharedPreferences.getString("radius","");
+        }else{
+            Utils.radius = "1000";
+        }
+    }
+
+    private void getMap(){
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("tiagoproperties",Context.MODE_PRIVATE);
+        if(sharedPreferences.getString("map","") != ""||sharedPreferences.getString("map","") != null ){
+            Utils.map = sharedPreferences.getString("map","");
+        }else{
+            Utils.map = "Satellite";
+        }
+
+    }
 
 
+    private void setMarker(LatLng latLng,String name,int pos)
+    {
+        nMap.setOnMarkerClickListener(this);
 
+        nMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(pos+"- "+name));
+                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        String val = marker.getTitle();
+        String[] parts = val.split("-");
+        String part1 = parts[0];
+        String part2 = parts[1];
+        if(part2.length()>32){
+            String temp = part2.substring(0,32);
+            part2 = temp;
+        }
+        int pos = Integer.parseInt(part1);
+        //Toast.makeText(getContext(), pos+"", Toast.LENGTH_LONG).show();
+        textFavorite.setText(pos+"- "+part2);
+        btn_favorite.setVisibility(View.VISIBLE);
+
+        marker.showInfoWindow();
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(marker.getPosition())
+                .zoom(19)
+                .bearing(45)
+                .tilt(60)
+                .build();
+        nMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        return true;
+    }
+    @Override
+    public void onMapClick(LatLng latLng) {
+
+    }
     @Override
     public void onMapLongClick(LatLng latLng) {
 
-
+        textFavorite.setText("");
+        if(btn_favorite.getVisibility() == View.VISIBLE){
+            btn_favorite.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -363,4 +659,6 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     public void onProviderDisabled(String provider) {
 
     }
+
+
 }

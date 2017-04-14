@@ -5,4 +5,6 @@ package com.estg.joaoviana.project_cmovel;
  */
 
 public class LastLocation {
+
+
 }

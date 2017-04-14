@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,8 +6,23 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/titleFavorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textColor="@color/black"
+        android:text="Favorites Places" />
+
+    <ListView
+        android:id="@+id/listFavorites"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_below="@+id/titleFavorites"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp" />
 
-</FrameLayout>
+</RelativeLayout>

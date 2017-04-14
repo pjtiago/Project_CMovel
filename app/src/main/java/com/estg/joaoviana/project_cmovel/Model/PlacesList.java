@@ -1,5 +1,6 @@
 package com.estg.joaoviana.project_cmovel.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,13 +8,21 @@ import java.util.List;
  */
 
 public class PlacesList {
-    private List<Place> placeList;
+    private ArrayList<Place> placeList;
 
-    public List<Place> getPlaceList() {
+    public ArrayList<Place> getPlaceList() {
         return placeList;
     }
 
-    public void setPlaceList(List<Place> placeList) {
+    /*public void setPlaceList(List<Place> placeList) {
         this.placeList = placeList;
+    }*/
+
+    public void addToList(Place p){
+        placeList.add(p);
+    }
+
+    public void emptyList(){
+        placeList.clear();
     }
 }

@@ -57,6 +57,7 @@ public class StreetFragment extends Fragment implements OnStreetViewPanoramaRead
         super.onActivityCreated(savedInstanceState);
 
 
+
     }
 
 

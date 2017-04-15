@@ -15,7 +15,7 @@
         android:textStyle="bold"
         android:textSize="30dp"
         android:textColor="@color/black"
-        android:text="Propertiess" />
+        android:text="@string/properties" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -32,7 +32,7 @@
             android:textSize="15dp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:text="Choose Map"
+            android:text="@string/choose_map"
             />
 
         <Spinner
@@ -43,7 +43,7 @@
             android:id="@+id/btnSaveMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"/>
+            android:text="@string/save"/>
 
 
     </LinearLayout>
@@ -62,7 +62,7 @@
             android:textSize="15dp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:text="Search Radius Distance"
+            android:text="@string/search_radius_distance"
             />
 
         <EditText
@@ -71,12 +71,12 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:textSize="15dp"
-            android:hint="Distance in meters" />
+            android:hint="@string/distance_in_meters" />
         <Button
             android:id="@+id/btnSaveRadius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"/>
+            android:text="@string/save"/>
 
     </LinearLayout>
 

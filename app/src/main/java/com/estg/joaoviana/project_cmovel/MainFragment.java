@@ -642,7 +642,7 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     public boolean onMarkerClick(Marker marker) {
         String val = marker.getTitle();
 
-        if(val.equals(R.string.you_are_here)){
+        if(val.equals("You are Here")||val.equals("Você está Aqui")){
 
         }else {
             String[] parts = val.split("-");

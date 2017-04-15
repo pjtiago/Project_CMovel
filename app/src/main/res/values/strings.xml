@@ -41,6 +41,33 @@
     <string name="favorite_deleted">Favorite deleted</string>
     <string name="updated_sucess">Updated with Success</string>
     <string name="deleted_success">Deleted with Success</string>
+    <string name="favorites_places">Favorites Places</string>
+    <string name="your_description">Your Description</string>
+    <string name="update">Update</string>
+    <string name="messages">Messages</string>
+    <string name="new_message">New Message</string>
+    <string name="received">Received</string>
+    <string name="sent">Sent</string>
+    <string name="to">To:</string>
+    <string name="title2">Title:</string>
+    <string name="body">Body:</string>
+    <string name="body2">Body</string>
+    <string name="send">Send</string>
+    <string name="clear">Clear</string>
+    <string name="properties">Properties</string>
+    <string name="choose_map">Choose Map</string>
+    <string name="save">Save</string>
+    <string name="search_radius_distance">Search Radius Distance</string>
+    <string name="distance_in_meters">Distance in meters</string>
+    <string name="messages_received">Messages Received</string>
+    <string name="messages_sent">Messages Sent</string>
+    <string name="travel_application">Travel Application</string>
+    <string name="save_and_visit_your">Save and visit your</string>
+    <string name="favorites_locations">favorites locations!!!</string>
+    <string name="go_to_map">Go to Map</string>
+    <string name="favorites">Favorites</string>
+    <string name="remove">Remove</string>
+    <string name="log_off">Log off</string>
 
 
 </resources>

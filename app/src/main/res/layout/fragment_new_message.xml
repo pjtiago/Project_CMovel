@@ -15,7 +15,7 @@
         android:textStyle="bold"
         android:textSize="30dp"
         android:textColor="@color/black"
-        android:text="New Message" />
+        android:text="@string/new_message" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -32,7 +32,7 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:text="To: "
+            android:text="@string/to"
             />
 
         <Spinner
@@ -57,7 +57,7 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:text="Title:"
+            android:text="@string/title2"
             />
 
         <EditText
@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:hint="Title" />
+            android:hint="@string/title" />
 
 
     </LinearLayout>
@@ -86,7 +86,7 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:text="Body:"
+            android:text="@string/body"
             />
         <EditText
             android:id="@+id/editTextBody"
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/linearLayout3"
             android:inputType="textMultiLine"
-            android:hint="Body"/>
+            android:hint="@string/body2"/>
     </LinearLayout>
 
     <LinearLayout
@@ -111,7 +111,7 @@
             android:textSize="24dp"
             android:textColor="@color/colorPrimary"
             android:layout_weight="1"
-            android:text="Send"
+            android:text="@string/send"
             />
         <Button
             android:id="@+id/buttonCancel"
@@ -120,7 +120,7 @@
             android:textSize="24dp"
             android:textColor="@color/orange"
             android:layout_weight="1"
-            android:text="Clear"
+            android:text="@string/clear"
             />
     </LinearLayout>
 

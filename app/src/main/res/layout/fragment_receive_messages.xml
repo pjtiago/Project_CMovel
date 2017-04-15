@@ -15,7 +15,7 @@
         android:textStyle="bold"
         android:textSize="25dp"
         android:textColor="@color/black"
-        android:text="Messages Received" />
+        android:text="@string/messages_received" />
 
     <ListView
         android:id="@+id/lista"

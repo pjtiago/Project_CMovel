@@ -41,19 +41,21 @@ public class MyCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ImageView icon = (ImageView) view.findViewById(R.id.icon);
-        TextView id = (TextView) view.findViewById(R.id.id);
+        TextView vicinity = (TextView) view.findViewById(R.id.vicinity);
         TextView name = (TextView) view.findViewById(R.id.name);
-        TextView latitude = (TextView) view.findViewById(R.id.latitude);
+       /* TextView latitude = (TextView) view.findViewById(R.id.latitude);
         TextView longitude = (TextView) view.findViewById(R.id.longitude);
-        TextView ref = (TextView) view.findViewById(R.id.ref);
+        TextView ref = (TextView) view.findViewById(R.id.ref);*/
+        TextView description = (TextView) view.findViewById(R.id.description);
 
         String url = mCursor.getString(cursor.getColumnIndexOrThrow(Contrato.Place.COLUMN_ICON));
         icon.setImageBitmap(getBitmap(url));
-        id.setText("id: " + mCursor.getString(cursor.getColumnIndexOrThrow(Contrato.Place._ID)));
+        vicinity.setText("morada: " + mCursor.getString(cursor.getColumnIndexOrThrow(Contrato.Place.COLUMN_VICINITY)));
         name.setText("name: " + mCursor.getString(cursor.getColumnIndexOrThrow(Contrato.Place.COLUMN_NAME)));
-        latitude.setText("Lat: " + String.valueOf(mCursor.getDouble(cursor.getColumnIndexOrThrow(Contrato.Place.COLUMN_LATITUDE))));
+        /*latitude.setText("Lat: " + String.valueOf(mCursor.getDouble(cursor.getColumnIndexOrThrow(Contrato.Place.COLUMN_LATITUDE))));
         longitude.setText("Long: " + String.valueOf(mCursor.getDouble(cursor.getColumnIndexOrThrow(Contrato.Place.COLUMN_LONGITUDE))));
-        ref.setText("Ref: " + mCursor.getString(cursor.getColumnIndexOrThrow(Contrato.Place.COLUMN_ID)));
+        ref.setText("Ref: " + mCursor.getString(cursor.getColumnIndexOrThrow(Contrato.Place.COLUMN_ID)));*/
+        description.setText("Description: " + mCursor.getString(cursor.getColumnIndexOrThrow(Contrato.Place.COLUMN_DESCRIPTION)));
     }
 
     public Bitmap getBitmap(String bitmapUrl) {

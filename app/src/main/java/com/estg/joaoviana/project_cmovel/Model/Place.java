@@ -10,13 +10,23 @@ public class Place {
     private String icon;
     private Double latitude;
     private Double longitude;
+    private String vicinity;
 
-    public Place(String id, String name, String icon, Double latitude, Double longitude) {
+    public Place(String id, String name, String icon, Double latitude, Double longitude, String vicinity) {
         this.id = id;
         this.name = name;
         this.icon = icon;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.vicinity = vicinity;
+    }
+
+    public String getVicinity() {
+        return vicinity;
+    }
+
+    public void setVicinity(String vicinity) {
+        this.vicinity = vicinity;
     }
 
     public String getId() {

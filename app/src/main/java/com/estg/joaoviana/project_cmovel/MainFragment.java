@@ -37,11 +37,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.estg.joaoviana.project_cmovel.Database.Contrato;
 import com.estg.joaoviana.project_cmovel.Database.DB;
 import com.estg.joaoviana.project_cmovel.Model.Place;
-import com.estg.joaoviana.project_cmovel.Model.PlacesList;
 import com.estg.joaoviana.project_cmovel.authentication.Connectivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -58,8 +56,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class MainFragment extends Fragment implements LocationListener,OnMapReadyCallback,
@@ -74,7 +70,7 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     TextView textCountry;
 
     ImageView imageViewIcon;
-    private View rootView;
+    View rootView;
     GoogleMap nMap;
     ArrayList<LatLng> pontos;
 
@@ -91,7 +87,6 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     SQLiteDatabase db;
     Cursor c;
     private static final String ARG_TYPE_MAP = "normal";
-    //LocationRequest mLocationRequest;
 
     public MainFragment() {
         // Required empty public constructor
@@ -113,8 +108,12 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        if (!Connectivity.isGPSEnabled(getActivity())) {
+            Toast.makeText(getActivity(), R.string.no_signal, Toast.LENGTH_LONG).show();
+        }
+
         if (!Connectivity.isConnected(getActivity())) {
-            Toast.makeText(getActivity(), "Network not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.no_internet, Toast.LENGTH_LONG).show();
         }
         getRadius();
         getMap();
@@ -235,7 +234,7 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
         nMap.addMarker(new MarkerOptions()
                 .position(currentLocal)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                .title("You are Here")).showInfoWindow();
+                .title(getString(R.string.you_are_here))).showInfoWindow();
 
         if(Utils.map.equals("Satellite")){
             nMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
@@ -307,7 +306,7 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
                         nMap.addMarker(new MarkerOptions()
                                 .position(currentPosition)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                                .title("You are Here")).showInfoWindow();
+                                .title("R.string.you_are_here")).showInfoWindow();
 
                         CameraPosition cameraPosition = new CameraPosition.Builder()
                                 .target(currentPosition)
@@ -325,17 +324,14 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
                         getPointsInterest(getActivity().getApplicationContext(),String.valueOf(Utils.radius));
 
                     } else {
-                        if(textSignal.getText()!="No Signal" ){
-                            textSignal.setText("No Signal");
+                        if(textSignal.getText()!=getString(R.string.no_signal) ){
+                            textSignal.setText(R.string.no_signal);
                         }
 
                         if(textSignal.getVisibility()== View.INVISIBLE){
                             textSignal.setVisibility(View.VISIBLE);
                         }
 
-
-                        Toast.makeText(getActivity(),"SEM SINAL",
-                                Toast.LENGTH_LONG).show();
                         LatLng currentPosition = new LatLng(Utils.lastLatitude, Utils.lastLongitude );
 
                         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -350,14 +346,14 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
 
                     }
                 } else {
-                    if(textSignal.getText()!="GPS is NOT turn ON"){
-                        textSignal.setText("GPS is NOT turn ON");
+                    if(textSignal.getText()!=getString(R.string.gps_off)){
+                        textSignal.setText(R.string.gps_off);
                     }
 
                     if(textSignal.getVisibility()== View.INVISIBLE){
                         textSignal.setVisibility(View.VISIBLE);
                     }
-                    Toast.makeText(getActivity(), "Sem Internet",
+                    Toast.makeText(getActivity(), R.string.no_internet,
                             Toast.LENGTH_LONG).show();
                     LatLng currentPosition = new LatLng(Utils.lastLatitude, Utils.lastLongitude );
 
@@ -491,7 +487,8 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
                         String icon = obj.getString("icon");
                         Double latitude = Double.parseDouble(localization.getString("lat"));
                         Double longitude = Double.parseDouble(localization.getString("lng"));
-                        place = new Place(id,name,icon,latitude,longitude);
+                        String vicinity = obj.getString("vicinity");
+                        place = new Place(id,name,icon,latitude,longitude,vicinity);
 
                         LatLng placeLocal = new LatLng(place.getLatitude(),place.getLongitude());
                         placeList.add(place);
@@ -594,6 +591,7 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
         String icon = place.getIcon();
         Double latitude = place.getLatitude();
         Double longitude = place.getLongitude();
+        String vicinity = place.getVicinity();
         Boolean bool = favoriteExist(ref);
         if(bool == false) {
             ContentValues cv = new ContentValues();
@@ -602,10 +600,13 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
             cv.put(Contrato.Place.COLUMN_ICON, icon);
             cv.put(Contrato.Place.COLUMN_LATITUDE, latitude);
             cv.put(Contrato.Place.COLUMN_LONGITUDE, longitude);
+            cv.put(Contrato.Place.COLUMN_VICINITY, vicinity);
+            cv.put(Contrato.Place.COLUMN_DESCRIPTION, "");
+
             db.insert(Contrato.Place.TABLE_NAME, null, cv);
-            Toast.makeText(getContext(), "Favorite Saved!!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.favorite_save, Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(getContext(), "Favorite Already Exists", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.favorite_save, Toast.LENGTH_LONG).show();
         }
 
 
@@ -615,7 +616,8 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     private Boolean favoriteExist(String ref){
         c = db.rawQuery("select "+Contrato.Place._ID+", "+Contrato.Place.COLUMN_ID+", "+
                 Contrato.Place.COLUMN_NAME+", "+ Contrato.Place.COLUMN_ICON+", "+
-                Contrato.Place.COLUMN_LATITUDE+", "+ Contrato.Place.COLUMN_LONGITUDE+
+                Contrato.Place.COLUMN_LATITUDE+", "+ Contrato.Place.COLUMN_LONGITUDE+", "
+                + Contrato.Place.COLUMN_DESCRIPTION+", "+ Contrato.Place.COLUMN_VICINITY+
                 " FROM " + Contrato.Place.TABLE_NAME + " WHERE " +Contrato.Place.COLUMN_ID+
                 "= '"+ref+"'", null);
         if(c.getCount() > 0){
@@ -640,7 +642,7 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
     public boolean onMarkerClick(Marker marker) {
         String val = marker.getTitle();
 
-        if(val.equals("You are Here")){
+        if(val.equals(R.string.you_are_here)){
 
         }else {
             String[] parts = val.split("-");

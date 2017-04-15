@@ -39,12 +39,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Boolean teste = Connectivity.isGPSEnabled(this);
+        Boolean gpsTest = Connectivity.isGPSEnabled(this);
 
-        if(teste){
-            Toast.makeText(getApplicationContext(), "Gps Ligado", Toast.LENGTH_LONG).show();
+        if(gpsTest){
+            Toast.makeText(getApplicationContext(), R.string.gps_turn_on, Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(getApplicationContext(), "GPS Desligado", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.gps_turn_off, Toast.LENGTH_LONG).show();
         }
 
         Intent i;
@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View v) {
         if (!Connectivity.isConnected(this)) {
-            Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG).show();
         } else {
             if (!isFieldsCorrect()) {
                 Toast.makeText(getApplicationContext(), R.string.emptyfields, Toast.LENGTH_LONG).show();

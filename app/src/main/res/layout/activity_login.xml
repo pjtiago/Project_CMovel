@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="Authentication Failed"
+            android:text="@string/authentication_failed"
             android:textSize="20dp"
             android:textColor="@color/red"
             android:layout_marginTop="10dp"

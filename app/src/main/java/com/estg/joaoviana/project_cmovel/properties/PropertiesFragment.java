@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.estg.joaoviana.project_cmovel.MainFragment;
+import com.estg.joaoviana.project_cmovel.Messages.NewMessageFragment;
+import com.estg.joaoviana.project_cmovel.Messages.ReceiveMessagesFragment;
 import com.estg.joaoviana.project_cmovel.R;
 import com.estg.joaoviana.project_cmovel.Utils;
 
@@ -91,7 +95,7 @@ public class PropertiesFragment extends Fragment {
                 String radius = editTextRadius.getText().toString();
                 setRadius(radius);
                 hideKeyboard(v);
-                Toast.makeText(getContext(), "Propertie Radius Saved", Toast.LENGTH_LONG).show();
+                changeFrag();
 
             }
         });
@@ -102,10 +106,17 @@ public class PropertiesFragment extends Fragment {
             public void onClick(View v)
             {
                 setMap(mapChoose);
-                Toast.makeText(getContext(), "Type of Map Saved", Toast.LENGTH_LONG).show();
+                changeFrag();
             }
         });
 
+    }
+
+    public void changeFrag(){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Fragment mainFragment = new MainFragment();
+        transaction.replace(R.id.content_main, mainFragment);
+        transaction.commit();
     }
 
     @Override
@@ -143,6 +154,8 @@ public class PropertiesFragment extends Fragment {
         ArrayAdapter adapter = new ArrayAdapter(getActivity(),R.layout.support_simple_spinner_dropdown_item , types_of_maps);
         sp.setAdapter(adapter);
     }
+
+
 
 
 

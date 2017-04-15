@@ -23,10 +23,13 @@ public class Contrato {
         public static final String COLUMN_ICON = "icon";
         public static final String COLUMN_LATITUDE = "latitude";
         public static final String COLUMN_LONGITUDE = "longitude";
+        public static final String COLUMN_DESCRIPTION = "description";
+        public static final String COLUMN_VICINITY = "vicinity";
 
 
         public static final String[] PROJECTION = {Place._ID,Place.COLUMN_ID,Place.COLUMN_NAME,
-                Place.COLUMN_ICON,Place.COLUMN_LATITUDE,Place.COLUMN_LONGITUDE};
+                Place.COLUMN_ICON,Place.COLUMN_LATITUDE,Place.COLUMN_LONGITUDE,
+                Place.COLUMN_DESCRIPTION,Place.COLUMN_VICINITY};
 
         public static final String SQL_CREATE_ENTRIES =
                 "CREATE TABLE " + Place.TABLE_NAME + "(" +
@@ -35,7 +38,9 @@ public class Contrato {
                         Place.COLUMN_NAME + TEXT_TYPE + "," +
                         Place.COLUMN_ICON+ TEXT_TYPE + "," +
                         Place.COLUMN_LATITUDE + DOUBLE_TYPE + "," +
-                        Place.COLUMN_LONGITUDE + DOUBLE_TYPE +");";
+                        Place.COLUMN_LONGITUDE + DOUBLE_TYPE + ", "+
+                        Place.COLUMN_DESCRIPTION+ TEXT_TYPE + ", "+
+                        Place.COLUMN_VICINITY+ TEXT_TYPE + ");";
 
 
         public static final String SQL_DROP_ENTRIES =

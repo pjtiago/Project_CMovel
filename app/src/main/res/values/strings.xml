@@ -29,6 +29,18 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="gps_turn_on">Gps Turn on</string>
+    <string name="gps_turn_off">GPS Turn off</string>
+    <string name="no_internet">Network not available</string>
+    <string name="authentication_failed">Authentication Failed</string>
+    <string name="invalid_username">Invalid Username</string>
+    <string name="you_are_here">You are Here</string>
+    <string name="no_signal">No Signal</string>
+    <string name="gps_off">GPS is NOT turn ON</string>
+    <string name="favorite_save">Favorite Saved!!!</string>
+    <string name="favorite_deleted">Favorite deleted</string>
+    <string name="updated_sucess">Updated with Success</string>
+    <string name="deleted_success">Deleted with Success</string>
 
 
 </resources>

@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Project_CMovel</string>
+    <string name="title">Viage</string>
+    <string name="sign_in">Entrar</string>
+    <string name="register">Registar</string>
+    <string name="emptyfields">Campos Vazios</string>
+    <string name="login">Login</string>
+    <string name="registration">Registrar</string>
+    <string name="username_email">Utilizador/Email</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="username">Utilizador</string>
+    <string name="confirm_password">Confirmar Password</string>
+    <string name="cancel">Cancelar</string>
+    <string name="registration_failed">Registro Falhou</string>
+    <string name="pw_dont_match">Password são diferentes</string>
+    <string name="valid_mail">Introduza um Email autentico</string>
+    <string name="auth_success">Autenticação com sucesso</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="regis_succ">Registro com Sucesso</string>
+
+
+    <string name="country_prompt">Escolha um pais</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="gps_turn_on">Gps Ligado</string>
+    <string name="gps_turn_off">GPS Desligado</string>
+    <string name="no_internet">Internet não está Disponivel</string>
+    <string name="authentication_failed">Autenticação Falhou</string>
+    <string name="invalid_username">Username Invalido</string>
+    <string name="you_are_here">Você está Aqui</string>
+    <string name="no_signal">Sem sinal</string>
+    <string name="gps_off">GPS não está Ligado</string>
+    <string name="favorite_save">Favorito Gravado!!!</string>
+    <string name="favorite_deleted">Favorito apagado</string>
+    <string name="updated_sucess">Update com Sucesso</string>
+    <string name="deleted_success">Apagado cim Sucesso</string>
+
+
+</resources>

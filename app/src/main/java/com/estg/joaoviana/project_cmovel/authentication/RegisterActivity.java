@@ -48,13 +48,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registration(View v) {
         if (!Connectivity.isConnected(this)) {
-            Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG).show();
         } else {
             if (!isFieldsCorrect()) {
 
             } else {
                 String url = "http://pjtiago.000webhostapp.com/cmovel_android/webservices/register_ws.php";
-                final JSONObject jsonObject = new JSONObject();
                 StringRequest stringRequest = new StringRequest
                         (Request.Method.POST, url, new Response.Listener<String>() {
 
@@ -129,7 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.valid_mail, Toast.LENGTH_LONG).show();
             return false;
         }else if(text.contains(".")){
-            Toast.makeText(getApplicationContext(),"Invalid Username", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.invalid_username, Toast.LENGTH_LONG).show();
             return false;
         }else{
             return true;

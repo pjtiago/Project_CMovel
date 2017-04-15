@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.estg.joaoviana.project_cmovel.Adapters.MyCursorAdapter;
 import com.estg.joaoviana.project_cmovel.Database.Contrato;
 import com.estg.joaoviana.project_cmovel.Database.DB;
 import com.estg.joaoviana.project_cmovel.R;
@@ -28,6 +29,7 @@ public class FavoritesFragment extends Fragment {
     Cursor c;
     ListView listFavorites;
     SimpleCursorAdapter adapter;
+    MyCursorAdapter mAdapter;
 
     public FavoritesFragment() {
         // Required empty public constructor
@@ -52,7 +54,7 @@ public class FavoritesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         listFavorites = (ListView) getActivity().findViewById(R.id.listFavorites);
-        preencheLista2();
+        preencheLista();
     }
 
     @Override
@@ -96,10 +98,12 @@ public class FavoritesFragment extends Fragment {
 
     }
 
-    private void preencheLista2() {
-        c = db.rawQuery("select "+Contrato.Place._ID+","+Contrato.Place.COLUMN_ID+
+    private void preencheLista() {
+        c = db.rawQuery("select "+Contrato.Place._ID+", "+Contrato.Place.COLUMN_ID+", "+
+                Contrato.Place.COLUMN_NAME+", "+ Contrato.Place.COLUMN_ICON+", "+
+                Contrato.Place.COLUMN_LATITUDE+", "+ Contrato.Place.COLUMN_LONGITUDE+
                 " FROM " + Contrato.Place.TABLE_NAME, null);
-
+/*
         String[] adapterCols = new String[]{Contrato.Place._ID,Contrato.Place.COLUMN_ID};
         int[] adapterRowViews = new int[]{android.R.id.text1,android.R.id.text2};
         adapter = new SimpleCursorAdapter(
@@ -108,11 +112,12 @@ public class FavoritesFragment extends Fragment {
                 c,
                 adapterCols,
                 adapterRowViews,
-                SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+                SimpleCursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);*/
+        mAdapter = new MyCursorAdapter(getContext(),c);
 
 
 
-        listFavorites.setAdapter(adapter);
+        listFavorites.setAdapter(mAdapter);
     }
 
 }

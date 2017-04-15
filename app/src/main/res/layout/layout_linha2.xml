@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_linha"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.estg.joaoviana.project_cmovel.authentication.LoginActivity">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="icon"
+        />
+    <TextView
+        android:id="@+id/id"
+        android:layout_below="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="id"
+      />
+    <TextView
+        android:id="@+id/name"
+        android:layout_below="@+id/id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        />
+        <TextView
+          android:id="@+id/latitude"
+          android:layout_below="@+id/name"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+            android:text="latitude"
+          />
+      <TextView
+         android:id="@+id/longitude"
+         android:layout_below="@+id/latitude"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+          android:text="long"
+
+         />
+    <TextView
+        android:id="@+id/ref"
+        android:layout_below="@+id/longitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ref"
+        />
+</RelativeLayout>

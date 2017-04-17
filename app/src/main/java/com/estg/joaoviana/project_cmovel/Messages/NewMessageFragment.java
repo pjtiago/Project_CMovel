@@ -235,7 +235,7 @@ public class NewMessageFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(), R.string.emptyfields, Toast.LENGTH_LONG).show();
             return false;
         }else if(editTextTitle.getText().length() < 3 || editTextBody.getText().length() < 3){
-            Toast.makeText(getActivity().getApplicationContext(), "Text to Short to be sent", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.short_tobe_sent, Toast.LENGTH_LONG).show();
             return false;
         }else{
             return true;

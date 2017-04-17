@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Welcome "+ "'"+ Auth.getUsername()+"'");
+        setTitle(getString(R.string.welcome)+ "  '"+ Auth.getUsername()+"' !!!");
 
         mainFrag = MainFragment.newInstance("normal");
         messagesFrag = MessagesFrag.newInstance();

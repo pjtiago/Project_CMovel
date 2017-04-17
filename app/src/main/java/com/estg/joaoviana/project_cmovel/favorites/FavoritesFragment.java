@@ -177,6 +177,7 @@ public class FavoritesFragment extends Fragment {
         int itemPosition = info.position;
         c.moveToPosition(itemPosition);
         int id_place = c.getInt(c.getColumnIndex(Contrato.Place._ID));
+        String descr = c.getString(c.getColumnIndex(Contrato.Place.COLUMN_DESCRIPTION));
         switch (item.getItemId()){
             case R.id.removeItem:
                 deleteFromDB(id_place);
@@ -184,7 +185,7 @@ public class FavoritesFragment extends Fragment {
                 return true;
 
             case R.id.updateItem:
-                getFieldsForUpdate(id_place);
+                getFieldsForUpdate(id_place,descr);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -195,11 +196,12 @@ public class FavoritesFragment extends Fragment {
         mAdapter.swapCursor(c);
     }
 
-    private void getFieldsForUpdate(int id_place) {
+    private void getFieldsForUpdate(int id_place,String description) {
         editTextUpdate.setVisibility(View.VISIBLE);
         btn_update.setVisibility(View.VISIBLE);
         btn_cancel.setVisibility(View.VISIBLE);
         textIdUpdate.setText(id_place+"");
+        editTextUpdate.setText(description);
     }
 
     private void updateInDB(int id_place) {

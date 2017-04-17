@@ -68,6 +68,9 @@
     <string name="favorites">Favorites</string>
     <string name="remove">Remove</string>
     <string name="log_off">Log off</string>
+    <string name="favorite_already">You already have that favorite</string>
+    <string name="short_tobe_sent">Text to Short to be sent</string>
+    <string name="welcome">Welcome</string>
 
 
 </resources>

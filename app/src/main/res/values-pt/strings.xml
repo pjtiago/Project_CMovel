@@ -68,5 +68,7 @@
     <string name="favorites">Favoritos</string>
     <string name="remove">Apagar</string>
     <string name="log_off">Terminar Sessão</string>
-
+    <string name="favorite_already">Você já tem esse favorito</string>
+    <string name="short_tobe_sent">Texto muito pequeno</string>
+    <string name="welcome">Bem Vindo</string>
 </resources>

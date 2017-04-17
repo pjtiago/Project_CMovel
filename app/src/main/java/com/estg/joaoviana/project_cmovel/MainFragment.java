@@ -306,7 +306,7 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
                         nMap.addMarker(new MarkerOptions()
                                 .position(currentPosition)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                                .title("R.string.you_are_here")).showInfoWindow();
+                                .title("Você está Aqui")).showInfoWindow();
 
                         CameraPosition cameraPosition = new CameraPosition.Builder()
                                 .target(currentPosition)
@@ -331,7 +331,8 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
                         if(textSignal.getVisibility()== View.INVISIBLE){
                             textSignal.setVisibility(View.VISIBLE);
                         }
-
+                        Toast.makeText(getActivity(), R.string.no_signal,
+                                Toast.LENGTH_LONG).show();
                         LatLng currentPosition = new LatLng(Utils.lastLatitude, Utils.lastLongitude );
 
                         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -606,7 +607,7 @@ public class MainFragment extends Fragment implements LocationListener,OnMapRead
             db.insert(Contrato.Place.TABLE_NAME, null, cv);
             Toast.makeText(getContext(), R.string.favorite_save, Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(getContext(), R.string.favorite_save, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.favorite_already, Toast.LENGTH_LONG).show();
         }
 
 

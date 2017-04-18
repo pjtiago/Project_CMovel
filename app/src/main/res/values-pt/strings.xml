@@ -71,4 +71,11 @@
     <string name="favorite_already">Você já tem esse favorito</string>
     <string name="short_tobe_sent">Texto muito pequeno</string>
     <string name="welcome">Bem Vindo</string>
+    <string name="order_by">Ordenar Por:</string>
+
+    <string-array name="array_order">
+        <item>1- Nome</item>
+        <item>2- Morada</item>
+        <item>3- Descrição</item>
+    </string-array>
 </resources>

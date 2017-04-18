@@ -71,6 +71,13 @@
     <string name="favorite_already">You already have that favorite</string>
     <string name="short_tobe_sent">Text to Short to be sent</string>
     <string name="welcome">Welcome</string>
+    <string name="order_by">Order By:</string>
+
+    <string-array name="array_order">
+        <item>1- Name</item>
+        <item>2- Address</item>
+        <item>3- Description</item>
+    </string-array>
 
 
 </resources>
